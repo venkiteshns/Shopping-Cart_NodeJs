@@ -1,1 +1,1 @@
-shopping cart projesct as apart of studiying node.js express , mongodb
+shopping cart project as apart of studiying node.js express , mongodb
