@@ -1,5 +1,5 @@
-<div class="row mt-5">
-    <div class="container">
+<div class="container">
+    <div class="row mt-5">
         <h2 class="text-center">Login</h2>
         <form action="/login" method="post">
         {{#if loginErr}}
@@ -15,8 +15,10 @@
                 <input type="password" name="password" class="form-control" id="formGroupExampleInput2"
                     placeholder="Password">
             </div>
-            <a href="/signup">Create new account ?</a>
-            <input class="btn btn-success float-right" type="submit" name="" id="" value="Login">
+             <div class="d-flex justify-content-between align-items-center mt-3">
+                <a href="/signup" class="text-decoration-none">Create new account?</a>
+                <input class="btn btn-success" type="submit" value="Login">
+            </div>
         </form>
     </div>
 </div>

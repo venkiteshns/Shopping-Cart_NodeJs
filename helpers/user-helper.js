@@ -61,7 +61,7 @@ module.exports = {
 
                 if (proExist != -1) {
                     db.get().collection(collection.CART_COLLECTION)
-                        .updateOne({ 'products.item': new ObjectId(proId) },
+                        .updateOne({ user: new ObjectId(userId), 'products.item': new ObjectId(proId) },
                             {
                                 $inc: { 'products.$.quantity': 1 }
                             }
@@ -99,38 +99,27 @@ module.exports = {
                         $match: { user: new ObjectId(userId) } // Match the user's cart
                     },
                     {
-                        $unwind:'$products'
+                        $unwind: '$products'
                     },
                     {
-                        $project:{
-                            item:'$products.item',
-                            quantity:'$products.quantity'
+                        $project: {
+                            item: '$products.item',
+                            quantity: '$products.quantity'
                         }
                     },
                     {
-                        $lookup:{
-                            from:collection.PRODUCT_COLLECTION,
-                            localField:'item',
-                            foreignField:'_id',
-                            as:'productDetails'
+                        $lookup: {
+                            from: collection.PRODUCT_COLLECTION,
+                            localField: 'item',
+                            foreignField: '_id',
+                            as: 'productDetails'
+                        }
+                    },
+                    {
+                        $project: {
+                            item: 1, quantity: 1, productDetails: { $arrayElemAt: ['$productDetails', 0] }
                         }
                     }
-                    // {
-                    //     $lookup: {
-                    //         from: collection.PRODUCT_COLLECTION, // Join with the product collection
-                    //         let: { prodList: '$products' }, // Use products field from the cart
-                    //         pipeline: [
-                    //             {
-                    //                 $match: {
-                    //                     $expr: {
-                    //                         $in: ["$_id", "$$prodList"] // Match product IDs with the cart's products
-                    //                     }
-                    //                 }
-                    //             }
-                    //         ],
-                    //         as: 'ItemsInCart' // This will hold the matched products
-                    //     }
-                    // }
                 ]).toArray();
                 console.log("Cart items:", cartItems); // See the resulting cart items
                 resolve(cartItems);
@@ -158,5 +147,24 @@ module.exports = {
             resolve(count)
         })
 
+    },
+
+    changeProductQuantity: (details) => {
+        count = parseInt(details.count)
+        console.log(details.cart, details.product);
+
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CART_COLLECTION)
+                .updateOne({
+                    _id: new ObjectId(details.cart),
+                    'products.item': new ObjectId(details.product)
+                },
+                {
+                    $inc: { 'products.$.quantity': count }
+                }
+                ).then(() => {
+                    resolve()
+                })
+        })
     }
 };
