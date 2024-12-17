@@ -148,23 +148,43 @@ module.exports = {
         })
 
     },
-
+    
     changeProductQuantity: (details) => {
-        count = parseInt(details.count)
-        console.log(details.cart, details.product);
+    const count = parseInt(details.count);
+    console.log("Cart ID:", details.cart);  // Log to ensure the cart ID is correct
+    console.log("Product ID:", details.product);  // Log to ensure the product ID is correct
 
-        return new Promise((resolve, reject) => {
-            db.get().collection(collection.CART_COLLECTION)
-                .updateOne({
-                    _id: new ObjectId(details.cart),
-                    'products.item': new ObjectId(details.product)
-                },
-                {
-                    $inc: { 'products.$.quantity': count }
-                }
-                ).then(() => {
-                    resolve()
-                })
-        })
+    // Validate ObjectId
+    if (!ObjectId.isValid(details.cart) || !ObjectId.isValid(details.product)) {
+        return Promise.reject('Invalid ObjectId');
     }
+
+    return new Promise((resolve, reject) => {
+        db.get().collection(collection.CART_COLLECTION)
+        .updateOne(
+            {
+            _id: new ObjectId(details.cart),
+            'products.item': new ObjectId(details.product)
+            },
+            {
+            $inc: { 'products.$.quantity': count }
+            }
+        )
+        .then(() => {
+            // Return the updated cart (including the updated quantity)
+            db.get().collection(collection.CART_COLLECTION)
+            .findOne({ _id: new ObjectId(details.cart) })
+            .then((updatedCart) => {
+                const updatedProduct = updatedCart.products.find(
+                (product) => product.item.toString() === details.product
+                );
+                resolve({ updatedQuantity: updatedProduct.quantity });
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+    }
+
+      
 };

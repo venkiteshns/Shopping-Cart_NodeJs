@@ -5,13 +5,16 @@
           <th scope="col">Item</th>
           <th scope="col">Title</th>
           <th scope="col">Quantity</th>
+          <th></th>
         </tr>
         {{#each products}}
-          <tr>
-            <td><img style="height: 80px;,width: 50px;" src="/product-images/{{this.productDetails._id}}.jpg" alt=""></td>
+          <tr id="product-{{this.productDetails._id}}">
+            <td><img style="height: 80px; width: 80px;" src="/product-images/{{this.productDetails._id}}.jpg" alt=""></td>
             <td>{{this.productDetails.name}}</td>
             <td>
-              <button class="btn btn-secondary me-2" onclick="changeQuantity('{{this._id}}','{{this.productDetails._id}}',-1)">-</button>{{this.quantity}}<button class="btn btn-secondary ms-2" onclick="changeQuantity('{{this._id}}','{{this.productDetails._id}}',1)">+</button>
+              <button class="btn btn-secondary me-2" onclick="changeQuantity('{{this._id}}', '{{this.productDetails._id}}', -1)">-</button>
+             <span class="product-quantity" data-product-id="{{this.productDetails._id}}">{{this.quantity}}</span>
+              <button class="btn btn-secondary ms-2" onclick="changeQuantity('{{this._id}}', '{{this.productDetails._id}}', 1)">+</button>
             </td>
             <td><a href="" class="btn btn-danger">Remove</a></td>
           </tr>

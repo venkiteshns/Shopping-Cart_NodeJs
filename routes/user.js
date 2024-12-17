@@ -91,7 +91,6 @@ router.get('/add-to-cart/:id', async (req, res) => {
 
 router.get("/cart",verifyLogin,async (req,res)=>{
   let user =req.session.user
-  console.log("user identify",user.name);
   let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: new ObjectId(req.session.user._id) })
   if(userCart){
     let products=await userHelpers.getCartProducts(req.session.user._id)
@@ -102,10 +101,12 @@ router.get("/cart",verifyLogin,async (req,res)=>{
   }
 })
 
-router.post('/change-product-quantity',(req,res,next)=>{
-  console.log(req.body);
-  userHelpers.changeProductQuantity(req.body).then(()=>{
+router.post('/change-product-quantity', (req, res, next) => {
+  userHelpers.changeProductQuantity(req.body).then((updatedCart) => {
+    console.log(updatedCart);
+    res.json(updatedCart); // Send the updated cart back to the frontend
   })
-})
+});
+
 
 module.exports = router;
