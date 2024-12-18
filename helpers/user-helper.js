@@ -201,7 +201,51 @@ module.exports = {
             resolve()
         })
 
-    }
+    },
 
+    getTotalPrice:(userId)=>{
+        return new Promise(async (resolve, reject) => {
+            try {
+                let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                    {
+                        $match: { user: new ObjectId(userId) } // Match the user's cart
+                    },
+                    {
+                        $unwind: '$products'
+                    },
+                    {
+                        $project: {
+                            item: '$products.item',
+                            quantity: '$products.quantity'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.PRODUCT_COLLECTION,
+                            localField: 'item',
+                            foreignField: '_id',
+                            as: 'productDetails'
+                        }
+                    },
+                    {
+                        $project: {
+                            item: 1, quantity: 1, productDetails: { $arrayElemAt: ['$productDetails', 0] }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id:null,
+                            totalPrice:{$sum:{$multiply:[{$toDouble:'$quantity'},{$toDouble:'$productDetails.price'}]}}
+                        }
+                    }
+                ]).toArray();
+                console.log("Cart items:", total); // See the resulting cart items
+                resolve(total[0].totalPrice);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+                reject(error);
+            }
+        });
+    }
 
 };

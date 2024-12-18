@@ -39,20 +39,20 @@ router.get('/delete-product/:id', (req, res) => {
 })
 
 router.get('/edit-product/:id', async (req, res) => {
-  let product = await productHelpers.getProductDetails(req.params.id).then((product) => {
+  await productHelpers.getProductDetails(req.params.id).then((product) => {
     console.log(product);
     res.render('admin/edit-product', { product })
   })
 })
 
-router.post('/edit-product/:id', (req, res) => {
+router.post('/edit-product/:id', async (req, res) => {
   let id = req.params.id
-  productHelpers.updateProduct(req.params.id, req.body).then(() => {
-    res.redirect('/admin')
-    if (req.files.image) {
+  await productHelpers.updateProduct(req.params.id, req.body).then(() => {
+    if (req.files && req.files.image) {
       let image = req.files.image
       image.mv('./public/product-images/' + id + '.jpg')
     }
+    res.redirect('/admin')
   })
 })
 module.exports = router;

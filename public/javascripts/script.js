@@ -37,34 +37,20 @@ function changeQuantity(cartId, proId, count) {
       console.log('Response:', response); // Log the response to check updated quantity
       if(response.itemRemove){
         alert('item Removed From Cart')
-        // location.reload()
         document.getElementById(proId).remove();
       }else{
         let currentQuantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
-        let newQuantity=currentQuantity+parseInt(count)
+        currentQuantity+=parseInt(count)
+        document.getElementById(`quantity-${proId}`).innerHTML=currentQuantity
 
-        // updateQuantityInCart(proId,newQuantity)
-        // location.reload()
-  
         //Or Can use this
-        document.getElementById(`quantity-${proId}`).innerHTML=newQuantity
-        // location.reload()
+        // updateQuantityInCart(proId,newQuantity)
+        // location.reload()  
       }
     }
   });
 }
 
-function updateQuantityInCart(productId, updatedQuantity) {
-  // Find the span element that holds the quantity for this product
-  const productQuantityElement = document.querySelector(`.product-quantity[data-product-id="${productId}"]`);
-
-  if (productQuantityElement) {
-    // Update the text content of the quantity span
-    productQuantityElement.textContent = updatedQuantity;
-  } else {
-    console.error('Product quantity element not found');
-  }
-}
 
 
 
