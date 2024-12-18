@@ -94,7 +94,7 @@ router.get("/cart",verifyLogin,async (req,res)=>{
   let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: new ObjectId(req.session.user._id) })
   if(userCart){
     let products=await userHelpers.getCartProducts(req.session.user._id)
-    console.log("cart items got :",products);
+    // console.log("cart items got :",products);
     res.render('user/cart',{products,user})  
   }else{
     res.render('user/cart',{user}) 
@@ -102,11 +102,19 @@ router.get("/cart",verifyLogin,async (req,res)=>{
 })
 
 router.post('/change-product-quantity', (req, res, next) => {
-  userHelpers.changeProductQuantity(req.body).then((updatedCart) => {
-    console.log(updatedCart);
-    res.json(updatedCart); // Send the updated cart back to the frontend
+  userHelpers.changeProductQuantity(req.body).then((response) => {
+    console.log('cart update response',response);
+    res.json(response); 
   })
 });
+
+router.get('/remove-item/:id/',(req,res)=>{
+  console.log('id remove',req.params.id);
+
+  userHelpers.removeCartItem(req.params.id,req.session.user._id).then(()=>{
+    res.redirect('/cart')
+  })
+})
 
 
 module.exports = router;

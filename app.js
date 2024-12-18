@@ -7,11 +7,18 @@ var {engine}=require('express-handlebars')
 var fileUpload=require('express-fileupload')
 const db = require("./config/connection");
 var session =require('express-session')
+const helpers = require('handlebars-helpers')(); // Automatically load all helpers
+
+
 
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
 
 var app = express();
+
+// Register helpers
+// const helpers = handlebarsHelpers;
+
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,7 +28,8 @@ app.engine('hbs', engine({
   extname: 'hbs', 
   defaultLayout: 'layout', 
   layoutsDir: path.join(__dirname, 'views/layout'), 
-  partialsDir: path.join(__dirname, 'views/partials') 
+  partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: helpers 
 }));
 
 app.set('view engine', 'hbs');

@@ -21,6 +21,8 @@ function changeQuantity(cartId, proId, count) {
   console.log('Cart ID:', cartId);
   console.log('Product ID:', proId);
   console.log('Count:', count);
+  let quantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
+
 
   $.ajax({
     url: '/change-product-quantity',
@@ -28,12 +30,26 @@ function changeQuantity(cartId, proId, count) {
     data: {
       cart: cartId,
       product: proId,
+      quantity:quantity,
       count: count
     },
     success: (response) => {
       console.log('Response:', response); // Log the response to check updated quantity
-      // Update the quantity in the DOM
-      updateQuantityInCart(proId, response.updatedQuantity);
+      if(response.itemRemove){
+        alert('item Removed From Cart')
+        // location.reload()
+        document.getElementById(proId).remove();
+      }else{
+        let currentQuantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
+        let newQuantity=currentQuantity+parseInt(count)
+
+        // updateQuantityInCart(proId,newQuantity)
+        // location.reload()
+  
+        //Or Can use this
+        document.getElementById(`quantity-${proId}`).innerHTML=newQuantity
+        // location.reload()
+      }
     }
   });
 }
@@ -49,6 +65,8 @@ function updateQuantityInCart(productId, updatedQuantity) {
     console.error('Product quantity element not found');
   }
 }
+
+
 
 
 
