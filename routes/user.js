@@ -95,16 +95,16 @@ router.get("/cart", verifyLogin, async (req, res) => {
   if (userCart) {
     let products = await userHelpers.getCartProducts(req.session.user._id)
     let total = await userHelpers.getTotalPrice(req.session.user._id)
-
-    // console.log("cart items got :",products);
     res.render('user/cart', { products, user, total })
   } else {
     res.render('user/cart', { user })
   }
 })
 
-router.post('/change-product-quantity', (req, res, next) => {
-  userHelpers.changeProductQuantity(req.body).then((response) => {
+router.post('/change-product-quantity', (req, res) => {
+  userHelpers.changeProductQuantity(req.body).then(async (response) => {
+    console.log('user:', req.body.user);
+    response.total = await userHelpers.getTotalPrice(req.body.user)
     console.log('cart update response', response);
     res.json(response);
   })

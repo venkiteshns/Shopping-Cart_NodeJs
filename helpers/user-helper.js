@@ -161,18 +161,18 @@ module.exports = {
             return Promise.reject('Invalid ObjectId');
         }
 
-        return new Promise(async(resolve, reject) => {
-            if (quantity == 1 && count == -1){
+        return new Promise(async (resolve, reject) => {
+            if (quantity == 1 && count == -1) {
                 await db.get().collection(collection.CART_COLLECTION).updateOne(
                     {
-                        _id: new ObjectId(details.cart) 
+                        _id: new ObjectId(details.cart)
                     },
                     {
-                        $pull: { products:  { item: new ObjectId(details.product) } } 
+                        $pull: { products: { item: new ObjectId(details.product) } }
                     }
                 );
-                resolve({itemRemove:true})
-            }else{
+                resolve({ itemRemove: true })
+            } else {
                 db.get().collection(collection.CART_COLLECTION)
                     .updateOne(
                         {
@@ -183,8 +183,8 @@ module.exports = {
                             $inc: { 'products.$.quantity': count }
                         }
                     )
-                    resolve(true)
-            }               
+                resolve({ status: true })
+            }
         });
     },
 
@@ -203,7 +203,7 @@ module.exports = {
 
     },
 
-    getTotalPrice:(userId)=>{
+    getTotalPrice: (userId) => {
         return new Promise(async (resolve, reject) => {
             try {
                 let total = await db.get().collection(collection.CART_COLLECTION).aggregate([
@@ -234,8 +234,8 @@ module.exports = {
                     },
                     {
                         $group: {
-                            _id:null,
-                            totalPrice:{$sum:{$multiply:[{$toDouble:'$quantity'},{$toDouble:'$productDetails.price'}]}}
+                            _id: null,
+                            totalPrice: { $sum: { $multiply: [{ $toDouble: '$quantity' }, { $toDouble: '$productDetails.price' }] } }
                         }
                     }
                 ]).toArray();

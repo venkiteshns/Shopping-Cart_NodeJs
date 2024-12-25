@@ -17,9 +17,10 @@ function addToCart(proId) {
   });
 }
 
-function changeQuantity(cartId, proId, count) {
-  console.log('Cart ID:', cartId);
+function changeQuantity(cartId, proId, userId, count) {
+  console.log('Script.js  Cart ID:', cartId);
   console.log('Product ID:', proId);
+  console.log('User ID:', userId);
   console.log('Count:', count);
   let quantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
 
@@ -28,20 +29,23 @@ function changeQuantity(cartId, proId, count) {
     url: '/change-product-quantity',
     method: 'POST',
     data: {
+      user: userId,
       cart: cartId,
       product: proId,
-      quantity:quantity,
+      quantity: quantity,
       count: count
     },
     success: (response) => {
       console.log('Response:', response); // Log the response to check updated quantity
-      if(response.itemRemove){
+      if (response.itemRemove) {
         alert('item Removed From Cart')
         document.getElementById(proId).remove();
-      }else{
+      } else {
         let currentQuantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
-        currentQuantity+=parseInt(count)
-        document.getElementById(`quantity-${proId}`).innerHTML=currentQuantity
+        currentQuantity += parseInt(count)
+        document.getElementById(`quantity-${proId}`).innerHTML = currentQuantity
+        document.getElementById('TotalCartValue').innerHTML = response.total
+
 
         //Or Can use this
         // updateQuantityInCart(proId,newQuantity)
