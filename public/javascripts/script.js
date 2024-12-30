@@ -40,6 +40,7 @@ function changeQuantity(cartId, proId, userId, count) {
       if (response.itemRemove) {
         alert('item Removed From Cart')
         document.getElementById(proId).remove();
+        location.reload()
       } else {
         let currentQuantity = parseInt(document.getElementById(`quantity-${proId}`).innerHTML);
         currentQuantity += parseInt(count)

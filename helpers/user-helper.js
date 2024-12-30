@@ -246,6 +246,113 @@ module.exports = {
                 reject(error);
             }
         });
+    },
+
+    placeOrder: (order, products, total) => {
+        return new Promise(async (resolve, reject) => {
+            console.log('Place order', order, products, total);
+            let status = order['payment-method'] === 'COD' ? 'placed' : 'pending'
+            let orderObj = {
+                Delivery: {
+                    Name: order.Name,
+                    Phone: order.Phone,
+                    Email: order.Email,
+                    Address: order.Address,
+                    Pincode: order.Pincode
+                },
+                userId: new ObjectId(order.userId),
+                Products: products,
+                TotalPrice: total,
+                PaymentMethod: order['payment-method'],
+                Status: status,
+                Date: new Date()
+
+            }
+            await db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then(() => {
+                db.get().collection(collection.CART_COLLECTION).deleteOne({ user: new ObjectId(order.userId) })
+                resolve()
+            })
+        })
+    },
+
+    getProductList: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let cart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: new ObjectId(userId) })
+            resolve(cart.products)
+        })
+    },
+
+    getorder: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let orders = await db.get()
+                    .collection(collection.ORDER_COLLECTION)
+                    .find({ userId: new ObjectId(userId) })
+                    .toArray();  // Converts the cursor to an array
+                resolve(orders);
+            } catch (error) {
+                reject(error);
+            }
+        })
+    },
+
+    getOrderProducts:(orderId)=>{
+        return new Promise(async(resolve, reject) => {
+            try {
+                let orderItems = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match: { _id: new ObjectId(orderId) }
+                    },
+                    {
+                        $unwind: '$Products'
+                    },
+                    {
+                        $project: {
+                            item: '$Products.item',
+                            quantity: '$Products.quantity'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: collection.PRODUCT_COLLECTION,
+                            localField: 'item',
+                            foreignField: '_id',
+                            as: 'productDetails'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            productDetails: { $arrayElemAt: ['$productDetails', 0] }
+                        }
+                    },
+                    {
+                        $addFields: {
+                            totalPrice: { 
+                                $multiply: [
+                                    { $toDouble: '$quantity' }, 
+                                    { $toDouble: '$productDetails.price' }
+                                ] 
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            item: 1,
+                            quantity: 1,
+                            productDetails: 1,
+                            totalPrice: 1
+                        }
+                    }
+                ]).toArray();
+                
+                console.log("Order items:", orderItems);
+                resolve(orderItems);
+            } catch (error) {
+                console.error("Error fetching cart items:", error);
+                reject(error);
+            }
+            
+        })
     }
 
 };

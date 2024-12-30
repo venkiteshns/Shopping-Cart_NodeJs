@@ -8,7 +8,6 @@
         <th scope="col">Quantity</th>
         <th></th>
       </tr>
-      <h2>{{user._id}}</h2>
       {{#each products}}
       <tr id="{{this.productDetails._id}}">
         <td><img style="height: 80px; width: 80px;" src="/product-images/{{this.productDetails._id}}.jpg" alt=""></td>
@@ -26,12 +25,14 @@
       </tr>
       {{/each}}
     </table>
-    <hr class="mt-4">
-    <div class="col-md-12 pt-3 pe-5">
-      <h3 class="float-end " style="margin-right: 250px;">Total : ₹ <span id="TotalCartValue">{{total}}</span></h3>
-    </div>
-    <div class="col-md-12 pt-1 pe-5">
-      <a class="btn btn-success float-end" style="margin-right: 250px; width: 200px;" href="/place-order">Order Now</a>
-    </div>
+    {{#if products}}
+      <hr class="mt-4">
+      <div class="col-md-12 pt-3 pe-5">
+        <h3 class="float-end " style="margin-right: 250px;">Total : ₹ <span id="TotalCartValue">{{total}}</span></h3>
+      </div>
+      <div class="col-md-12 pt-1 pe-5">
+        <a class="btn btn-success float-end" style="margin-right: 250px; width: 200px;" href="/place-order">Order Now</a>
+      </div>
+    {{/if}}
   </div>
 </div>

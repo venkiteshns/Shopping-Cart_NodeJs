@@ -7,6 +7,7 @@ const session = require("express-session");
 const db = require('../config/connection')
 const collection = require('../config/collection')
 const { ObjectId } = require('mongodb');
+const { response } = require("../app");
 
 /* Middleware to redirect logged-in users */
 function verifyLogin(req, res, next) {
@@ -94,12 +95,18 @@ router.get("/cart", verifyLogin, async (req, res) => {
   let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({ user: new ObjectId(req.session.user._id) })
   if (userCart) {
     let products = await userHelpers.getCartProducts(req.session.user._id)
-    let total = await userHelpers.getTotalPrice(req.session.user._id)
-    res.render('user/cart', { products, user, total })
+    let count = await userHelpers.getCartCount(req.session.user._id)
+    if (count != 0) {
+      let total = await userHelpers.getTotalPrice(req.session.user._id)
+      res.render('user/cart', { products, user, total })
+    } else {
+      res.render('user/cart', { user })
+    }
   } else {
     res.render('user/cart', { user })
   }
 })
+
 
 router.post('/change-product-quantity', (req, res) => {
   userHelpers.changeProductQuantity(req.body).then(async (response) => {
@@ -122,7 +129,32 @@ router.get('/place-order', verifyLogin, async (req, res) => {
   console.log("place order page");
   let total = await userHelpers.getTotalPrice(req.session.user._id)
   console.log('total', total);
-  res.render('user/place-order', { total })
+  res.render('user/place-order', { total, user: req.session.user })
+})
+
+router.post('/place-order', async (req, res) => {
+  console.log('Order Details', req.body);
+  let products = await userHelpers.getProductList(req.body.userId)
+  let total = await userHelpers.getTotalPrice(req.body.userId)
+
+  userHelpers.placeOrder(req.body, products, total).then(() => {
+    res.json({ status: true })
+  })
+})
+
+router.get('/order-success', (req, res) => {
+  res.render('user/order-placed', { user: req.session.user })
+})
+
+router.get('/view-orders', verifyLogin, async (req, res) => {
+  let orders = await userHelpers.getorder(req.session.user._id)
+  res.render('user/orders',{orders,user:req.session.user})
+})
+
+router.get('/view-order-products/:id',async(req,res)=>{
+  console.log('order id',req.params.id);
+  let products=await userHelpers.getOrderProducts(req.params.id)
+  res.render('user/order-products',{products,user:req.session.user})
 })
 
 
