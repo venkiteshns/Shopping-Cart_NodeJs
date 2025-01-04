@@ -54,6 +54,7 @@
 
 <script>
     $(document).ready(() => {
+        console.log('ajax post')
         $('#order-form').submit((e) => {
             e.preventDefault()
             $.ajax({
@@ -62,12 +63,95 @@
                 data: $('#order-form').serialize(),
                 success: (response) => {
                     alert(response)
-                    if (response.status) {
+                    if (response.codSuccess) {
                         location.href = '/order-success'
+                    } else {
+                        razorpayPayment(response)
                     }
                 }
             })
         })
     })
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_sq0PU8BxkBIL9f", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Shopping Cart", //your business name
+            "description": "Test Transaction",
+            "image": "data:image/jpeg;base64,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",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+            handler: function (response) {
+
+                /* alert(response.razorpay_payment_id);
+                 alert(response.razorpay_order_id);
+                 alert(response.razorpay_signature);*/
+
+
+                verifyPayment(response, order);
+            },
+            "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+                "name": "Gaurav Kumar", //your customer's name
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+            },
+            "notes": {
+                "address": "Shopping Cart"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    }
+
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/verify-payment',
+            method: 'POST',
+            data: {
+                payment,
+                order
+            },
+            success: (response) => {
+                if (response.status) {
+                    location.href = '/order-success';
+                } else {
+                    alert('Payment failed');
+                }
+            }
+        })
+    }
+
+    /* function verifyPayment(payment, order) {
+        $.ajax({
+            url: '/verify-payment',
+            method: 'POST',
+            data: {
+                payment,
+                order
+            },
+            beforeSend: () => {
+                $('#loading-spinner').show();
+            },
+            success: (response) => {
+                if (response.status) {
+                    location.href = '/order-success';
+                } else {
+                    alert('Payment failed');
+                }
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+                alert('Something went wrong. Please try again.');
+                console.error('AJAX Error:', textStatus, errorThrown);
+            },
+            complete: () => {
+                $('#loading-spinner').hide();
+            }
+        });
+    }*/
 
 </script>
