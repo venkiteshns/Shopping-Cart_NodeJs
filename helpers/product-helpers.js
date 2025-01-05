@@ -69,6 +69,11 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             const result = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
+                    $match:{
+                        Status:'placed'
+                    }
+                },
+                {
                     $lookup: {
                         from: collection.USER_LOGIN,
                         localField: 'userId',

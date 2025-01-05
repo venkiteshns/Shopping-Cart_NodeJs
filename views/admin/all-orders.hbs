@@ -3,121 +3,126 @@
 <section>
     <div class="container">
         <div class="row">
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th scope="col">Sl.no</th>
-                        <th scope="col">User Name</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Pincode</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
+            <div class="col-sm-12">
+                <table class="table mt-4 ">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sl.no</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Pincode</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each orders}}
-                    <tr>
-                        <th scope="row">{{@index}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each orders}}
+                        <tr>
+                            <th scope="row">{{@index}}</th>
 
-                        <td>{{this.UserName}}</td>
-                        <td>{{this.Date}}</td>
-                        <td>{{this.Delivery.Name}}</td>
-                        <td>{{this.Delivery.Phone}}</td>
-                        <td>{{this.Delivery.Address}}</td>
-                        <td>{{this.Delivery.Pincode}}</td>
-                        <td>{{this.TotalPrice}}</td>
-                        <td>{{this.Status}}</td>
-                        <td>
-                            <div class="d-flex gap-2">
+                            <td>{{this.UserName}}</td>
+                            <td>{{this.Date}}</td>
+                            <td>{{this.Delivery.Name}}</td>
+                            <td>{{this.Delivery.Phone}}</td>
+                            <td>{{this.Delivery.Address}}</td>
+                            <td>{{this.Delivery.Pincode}}</td>
+                            <td>{{this.TotalPrice}}</td>
+                            <td>{{this.Status}}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class=" btn btn-primary " style="min-width: 130px;"
+                                        href="/admin/order-products-admin/{{this._id}}">View Products</a>
+                                    <a class="  btn btn-success " style="min-width: 130px;"
+                                        href="/admin/ship-order/{{this._id}}">Ship Order</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+                <h1 class="text-center mt-5">SHIPPPED ORDERS</h1>
+
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sl.no</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Pincode</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each shippedOrders}}
+                        <tr>
+                            <th scope="row">{{@index}}</th>
+
+                            <td>{{this.UserName}}</td>
+                            <td>{{this.Date}}</td>
+                            <td>{{this.Delivery.Name}}</td>
+                            <td>{{this.Delivery.Phone}}</td>
+                            <td>{{this.Delivery.Address}}</td>
+                            <td>{{this.Delivery.Pincode}}</td>
+                            <td>{{this.TotalPrice}}</td>
+                            <td>{{this.Status}}</td>
+                            <td>
                                 <a class=" btn btn-primary " style="min-width: 130px;"
                                     href="/admin/order-products-admin/{{this._id}}">View Products</a>
-                                <a class="  btn btn-success " style="min-width: 130px;"
-                                    href="/admin/ship-order/{{this._id}}">Ship Order</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {{/each}}
+                            </td>
+                        </tr>
+                        {{/each}}
 
-                </tbody>
-            </table>
-            <h1 class="text-center mt-5">SHIPPPED ORDERS</h1>
+                    </tbody>
+                </table>
+                <h1 class="text-center mt-5">PAYMENT PENDING ORDERS</h1>
 
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th scope="col">Sl.no</th>
-                        <th scope="col">User Name</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Pincode</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
+                <table class="table mt-4">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sl.no</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Pincode</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Status</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each shippedOrders}}
-                    <tr>
-                        <th scope="row">{{@index}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each pendingOrders}}
+                        <tr>
+                            <th scope="row">{{@index}}</th>
+                            <td>{{this.UserName}}</td>
+                            <td>{{this.Date}}</td>
+                            <td>{{this.Delivery.Name}}</td>
+                            <td>{{this.Delivery.Phone}}</td>
+                            <td>{{this.Delivery.Address}}</td>
+                            <td>{{this.Delivery.Pincode}}</td>
+                            <td>{{this.TotalPrice}}</td>
+                            <td>{{this.Status}}</td>
+                            <td>
+                                <a class=" btn btn-primary " style="min-width: 130px;"
+                                    href="/admin/order-products-admin/{{this._id}}">View Products</a>
+                            </td>
+                        </tr>
+                        {{/each}}
 
-                        <td>{{this.UserName}}</td>
-                        <td>{{this.Date}}</td>
-                        <td>{{this.Delivery.Name}}</td>
-                        <td>{{this.Delivery.Phone}}</td>
-                        <td>{{this.Delivery.Address}}</td>
-                        <td>{{this.Delivery.Pincode}}</td>
-                        <td>{{this.TotalPrice}}</td>
-                        <td>{{this.Status}}</td>
-                        <td>
-                            <a class=" btn btn-primary " style="min-width: 130px;" href="/admin/order-products-admin/{{this._id}}">View Products</a>
-                        </td>
-                    </tr>
-                    {{/each}}
-
-                </tbody>
-            </table>
-            <h1 class="text-center mt-5">PAYMENT PENDING ORDERS</h1>
-
-            <table class="table mt-4">
-                <thead>
-                    <tr>
-                        <th scope="col">Sl.no</th>
-                        <th scope="col">User Name</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Pincode</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each pendingOrders}}
-                    <tr>
-                        <th scope="row">{{@index}}</th>
-                        <td>{{this.UserName}}</td>
-                        <td>{{this.Date}}</td>
-                        <td>{{this.Delivery.Name}}</td>
-                        <td>{{this.Delivery.Phone}}</td>
-                        <td>{{this.Delivery.Address}}</td>
-                        <td>{{this.Delivery.Pincode}}</td>
-                        <td>{{this.TotalPrice}}</td>
-                        <td>{{this.Status}}</td>
-                        <td>
-                            <a class=" btn btn-primary " style="min-width: 130px;" href="/admin/order-products-admin/{{this._id}}">View Products</a>
-                        </td>
-                    </tr>
-                    {{/each}}
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 </section>
