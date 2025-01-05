@@ -1,0 +1,32 @@
+<h1 class="text-center mt-5">All USERS</h1>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">Sl.no</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Email</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each userDetails}}
+                    <tr>
+                        <th scope="row">{{@index}}</th>
+                        <td>{{this.name}}</td>
+                        <td>{{this.phone}}</td>
+                        <td>{{this.email}}</td>
+                       
+                    </tr>
+                    {{/each}}
+
+                </tbody>
+            </table>
+            <div>
+            </div>
+        </div>
+</section>
