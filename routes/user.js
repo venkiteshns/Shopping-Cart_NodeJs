@@ -7,7 +7,6 @@ const session = require("express-session");
 const db = require('../config/connection')
 const collection = require('../config/collection')
 const { ObjectId } = require('mongodb');
-const { response } = require("../app");
 
 /* Middleware to redirect logged-in users */
 function verifyLogin(req, res, next) {

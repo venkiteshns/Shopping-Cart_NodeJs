@@ -1,7 +1,6 @@
 const db = require('../config/connection')
 const collection = require('../config/collection')
 const { ObjectId } = require('mongodb');
-const { response, resource } = require('../app');
 
 module.exports = {
 
@@ -204,12 +203,13 @@ module.exports = {
 
     getUserDetails: () => {
         return new Promise((resolve, reject) => {
-            db.get().collection(collection.ORDER_COLLECTION).distinct("userId").then((userIds) => {
-                console.log('userIds', userIds);
-                db.get().collection(collection.USER_LOGIN).find({ _id: { $in: userIds } }).toArray().then((userDetails) => {
-                    console.log('userdetails', userDetails);
-                    resolve(userDetails)
-                })
+            db.get().collection(collection.USER_LOGIN).find().toArray().then((users) => {
+                console.log('users', users);
+                resolve(users)
+                // db.get().collection(collection.USER_LOGIN).find({ _id: { $in: userIds } }).toArray().then((userDetails) => {
+                //     console.log('userdetails', userDetails);
+                //     resolve(userDetails)
+                // })
             })
         })
     }

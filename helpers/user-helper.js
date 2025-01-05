@@ -3,7 +3,6 @@ const db = require('../config/connection')
 const collection = require('../config/collection');
 const { ObjectId } = require('mongodb');
 const Razorpay = require('razorpay');
-const { resolve } = require('node:path');
 
 var instance = new Razorpay({
     key_id: 'rzp_test_sq0PU8BxkBIL9f',
