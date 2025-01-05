@@ -45,7 +45,7 @@ app.use(session({
   secret: "key",
   resave: false,               // Do not save the session if it wasn't modified
   saveUninitialized: false,    // Do not save an uninitialized session
-  cookie: { maxAge: 600000 }   // Set session expiration in milliseconds
+  cookie: { maxAge: 1000000 }   // Set session expiration in milliseconds
 }));
 
 db.connect((err) => {
