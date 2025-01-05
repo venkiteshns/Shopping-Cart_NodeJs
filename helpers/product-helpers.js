@@ -1,8 +1,30 @@
 const db = require('../config/connection')
 const collection = require('../config/collection')
 const { ObjectId } = require('mongodb');
+const { log } = require('grunt');
 
 module.exports = {
+
+    verifyAdminLogIn: (adminDetails) => {
+        console.log('function admin', adminDetails.email);
+        return new Promise(async (resolve, reject) => {
+            try {
+                let response = {}
+                let admin = await db.get().collection(collection.ADMIN_COLLECTION).findOne({ email: adminDetails.email, password: adminDetails.password })
+                console.log('admin found : ', admin);
+                if (admin) {
+                    response.admin = admin
+                    response.status = true
+                    resolve(response)
+                } else {
+                    resolve({ status: false })
+                }
+            } catch (error) {
+                console.log('ERROR NOT FOUND');
+                resolve({ status: false })
+            }
+        })
+    },
 
     addProduct: async (product, callback) => {
         try {
@@ -69,8 +91,8 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             const result = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                 {
-                    $match:{
-                        Status:'placed'
+                    $match: {
+                        Status: 'placed'
                     }
                 },
                 {
@@ -103,7 +125,7 @@ module.exports = {
                     $unset: 'userDetails'  // Optional: Remove the userDetails array after extracting the name
                 }
             ]).toArray();
-            
+
             console.log('Updated Orders:1', result);
             // let orders = db.get().collection(collection.ORDER_COLLECTION).find({ Status: "placed" }).toArray()
             // console.log('updated orders', orders);

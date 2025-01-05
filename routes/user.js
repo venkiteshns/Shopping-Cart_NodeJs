@@ -10,7 +10,7 @@ const { ObjectId } = require('mongodb');
 
 /* Middleware to redirect logged-in users */
 function verifyLogin(req, res, next) {
-  if (req.session.loggedIn) {
+  if (req.session.userloggedIn) {
     next();
   } else {
     res.redirect('/login')
@@ -31,9 +31,9 @@ router.get("/", async function (req, res, next) {
 });
 
 router.get('/login', (req, res) => {
-  console.log("redirect " + req.session.loggedIn);
+  console.log("redirect " + req.session.userloggedIn);
   res.setHeader('Cache-Control', 'no-store');
-  if (req.session.loggedIn) {
+  if (req.session.userloggedIn) {
     res.redirect('/')
   } else {
     res.render("user/log-in", { "loginErr": req.session.loginErr })
@@ -50,7 +50,7 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res) => {
   userHelpers.userLogin(req.body).then((response) => {
     if (response.status) {
-      req.session.loggedIn = true
+      req.session.userloggedIn = true
       req.session.user = response.user
       res.redirect('/')
     } else {
@@ -62,7 +62,8 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-  req.session.destroy()
+  req.session.user=null
+  req.session.userloggedIn = null
   res.redirect('/')
 })
 
@@ -74,7 +75,7 @@ router.post('/signup', (req, res) => {
   userHelpers.userSignup(req.body).then((response) => {
     console.log("accepting data from function");
     console.log(response);
-    req.session.loggedIn = true
+    req.session.userloggedIn = true
     req.session.user = response
     res.redirect('/')
   })
